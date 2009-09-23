@@ -48,7 +48,6 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>1.7</version>
-        <scope>test</scope>
     </dependency>
   </dependencies>
 
