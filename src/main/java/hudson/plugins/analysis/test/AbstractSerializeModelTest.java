@@ -15,13 +15,10 @@ import hudson.plugins.analysis.util.model.WorkspaceFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
@@ -114,20 +111,20 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
         verifyProject(project);
         verifyFirstAnnotation(project);
 
-        try {
-            OutputStream fout = new FileOutputStream("/home/hafner/project.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fout);
-
-            out.writeObject(project);
-            out.flush();
-            out.close();
-        }
-        catch (FileNotFoundException exception) {
-            // ignore
-        }
-        catch (IOException exception) {
-            // ignore
-        }
+//        try {
+//            OutputStream fout = new FileOutputStream("/home/hafner/project.ser");
+//            ObjectOutputStream out = new ObjectOutputStream(fout);
+//
+//            out.writeObject(project);
+//            out.flush();
+//            out.close();
+//        }
+//        catch (FileNotFoundException exception) {
+//            // ignore
+//        }
+//        catch (IOException exception) {
+//            // ignore
+//        }
 
         return project;
     }
@@ -215,7 +212,7 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
     public void testObjectIsSameAfterDeserialization() throws IOException, ClassNotFoundException {
         JavaProject original = createOriginal();
 //        Collection<FileAnnotation> files = original.getAnnotations();
-//        createXmlFile(new File("/project.ser.xml")).write(files.toArray(new FileAnnotation[files.size()]));
+//        createXmlFile(new File("/home/hafner/project.ser.xml")).write(files.toArray(new FileAnnotation[files.size()]));
 
         ByteArrayOutputStream outputStream = serialize(original);
         JavaProject copy = deserialize(outputStream.toByteArray());
