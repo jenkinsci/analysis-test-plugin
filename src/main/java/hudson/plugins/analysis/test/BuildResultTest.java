@@ -3,8 +3,8 @@ package hudson.plugins.analysis.test;
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.util.BuildResult;
-import hudson.plugins.analysis.util.ParserResult;
+import hudson.plugins.analysis.core.BuildResult;
+import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 

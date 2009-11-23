@@ -1,7 +1,7 @@
 package hudson.plugins.analysis.test;
 
 import static org.junit.Assert.*;
-import hudson.plugins.analysis.util.AnnotationDifferencer;
+import hudson.plugins.analysis.core.AnnotationDifferencer;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;

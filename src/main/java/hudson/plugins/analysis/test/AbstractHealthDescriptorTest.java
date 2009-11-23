@@ -2,8 +2,8 @@ package hudson.plugins.analysis.test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import hudson.plugins.analysis.util.AbstractHealthDescriptor;
-import hudson.plugins.analysis.util.HealthDescriptor;
+import hudson.plugins.analysis.core.AbstractHealthDescriptor;
+import hudson.plugins.analysis.core.HealthDescriptor;
 
 import org.junit.Test;
 
