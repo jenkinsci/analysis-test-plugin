@@ -206,10 +206,10 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
     /**
      * Test whether a serialized task is the same object after deserialization.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws Exception Signals a test failure
      */
     @Test
-    public void testObjectIsSameAfterDeserialization() throws IOException, ClassNotFoundException {
+    public void testObjectIsSameAfterDeserialization() throws Exception {
         JavaProject original = createOriginal();
 //        Collection<FileAnnotation> files = original.getAnnotations();
 //        createXmlFile(new File("/home/hafner/project.ser.xml")).write(files.toArray(new FileAnnotation[files.size()]));
@@ -255,6 +255,7 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
      *            original object
      * @return created output stream
      * @throws IOException
+     *             if the file could not be written
      */
     private ByteArrayOutputStream serialize(final JavaProject original) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -264,6 +265,7 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
 
         return outputStream;
     }
+
     /**
      * Verifies the created project.
      *
