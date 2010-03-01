@@ -1,12 +1,11 @@
 package hudson.plugins.analysis.test;
 
 import static junit.framework.Assert.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import hudson.model.AbstractBuild;
+import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
-import hudson.plugins.analysis.core.ResultAction;
 import hudson.plugins.analysis.util.model.DefaultAnnotationContainer;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
@@ -52,40 +51,57 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         T result; // the result is replaced by each new result
 
         // No change of defaults at the beginning
-        result = createBuildResult(createBuild(0, calendar), new ParserResult());
+        result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory());
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
 
         // Compare with a result that has warnings
-        result = createResult(1, calendar, createResultWithWarnings());
+        result = createDefaultResultWithNoWarnings(1, calendar, createResultWithWarnings());
         verifyResult(0, 1, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
 
         // Again a result without warnings, two days after the first build
         calendar.add(Calendar.DAY_OF_YEAR, 2);
-        result = createResult(2, calendar, result);
+        result = createDefaultResultWithNoWarnings(2, calendar, result);
         verifyResult(0, 1, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
 
-        // FIXME: Refactor test case
-//        // Now the results contains warnings again, resetting everything besides the high score
-//        result = createBuildResult(createBuild(3, calendar), createProjectWithWarning(), result);
-//        verifyResult(1, 0, 0, TWO_DAYS_IN_MS, false, TWO_DAYS_IN_MS, result);
-//
-//        // Now a result without warnings, one day after the previous build, e.g., no high score
-//        calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
-//        result = createResult(3, calendar, result);
-//        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, false, TWO_DAYS_IN_MS - TWO_DAYS_IN_MS / 2, result);
-//
-//        // Again a result without warnings, one day after the previous build, e.g., still no high score
-//        calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        result = createResult(4, calendar, result);
-//        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, false, 0, result);
-//
-//        // Finally, a result without warnings, three more days after the previous build, e.g., a high score of 4 days
-//        calendar.add(Calendar.DAY_OF_YEAR, 3);
-//        result = createResult(4, calendar, result);
-//        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, 2 * TWO_DAYS_IN_MS, true, 0, result);
+        // Now the results contains warnings again, resetting everything besides the high score
+        result = createBuildResult(createBuild(3, calendar), createProjectWithWarning(), result);
+        verifyResult(1, 0, 0, TWO_DAYS_IN_MS, false, TWO_DAYS_IN_MS, result);
+
+        // Now a result without warnings, one day after the previous build, e.g., no high score
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
+        result = createDefaultResultWithNoWarnings(3, calendar, result);
+        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, false, TWO_DAYS_IN_MS, result);
+
+        // Again a result without warnings, one day after the previous build, e.g., still no high score
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        result = createDefaultResultWithNoWarnings(4, calendar, result);
+        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, false, TWO_DAYS_IN_MS - TWO_DAYS_IN_MS / 2, result);
+
+        // Again a result without warnings, one day after the previous build, e.g., still no high score
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        result = createDefaultResultWithNoWarnings(5, calendar, result);
+        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, false, 0, result);
+
+        // Finally, a result without warnings, three more days after the previous build, e.g., a high score of 4 days
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        result = createDefaultResultWithNoWarnings(4, calendar, result);
+        verifyResult(0, 3, timeOfFirstZeroWarningsBuild, 2 * TWO_DAYS_IN_MS, true, 0, result);
 
         result.getDataFile().delete();
+    }
+
+    /**
+     * Creates a history that has no previous and reference builds.
+     *
+     * @return a null history object
+     */
+    private BuildHistory createNullHistory() {
+        BuildHistory history = mock(BuildHistory.class);
+
+        when(history.getReferenceResult()).thenReturn(new DefaultAnnotationContainer());
+
+        return history;
     }
 
     /**
@@ -97,7 +113,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
         long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
 
-        T result = createBuildResult(createBuild(0, calendar), new ParserResult());
+        T result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory());
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
 
         calendar.add(Calendar.DAY_OF_YEAR, 2);
@@ -115,7 +131,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
     public void checkZeroWarningsCounterInitializationStartUnstable() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
 
-        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning());
+        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning(), createNullHistory());
         verifyResult(1, 0, 0, 0, false, 0, result);
 
         calendar.add(Calendar.DAY_OF_YEAR, 2);
@@ -132,7 +148,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
     }
 
     /**
-     * Creates the new result.
+     * Creates a new result that has no warnings.
      *
      * @param buildNumner
      *            build ID
@@ -142,10 +158,9 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            previous result
      * @return the new result
      */
-    private T createResult(final int buildNumner, final GregorianCalendar calendar, final T previousResult) {
+    private T createDefaultResultWithNoWarnings(final int buildNumner, final GregorianCalendar calendar, final T previousResult) {
         return createBuildResult(createBuild(buildNumner, calendar), new ParserResult(), previousResult);
     }
-
 
     /**
      * Returns a result with some warnings.
@@ -154,7 +169,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      */
     private T createResultWithWarnings() {
         ParserResult projectWithWarning = createProjectWithWarning();
-        return createBuildResult(createBuild(42, new GregorianCalendar(2008, 1, 1, 12, 00)), projectWithWarning);
+        return createBuildResult(createBuild(42, new GregorianCalendar(2008, 1, 1, 12, 00)), projectWithWarning, createNullHistory());
     }
 
     /**
@@ -229,17 +244,12 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            calendar representing the time of the build
      * @return a mock for the build
      */
-    @SuppressWarnings("unchecked")
     private AbstractBuild<?, ?> createBuild(final int buildNumber, final Calendar calendar) {
         AbstractBuild<?, ?> build = mock(AbstractBuild.class);
 
         when(build.getTimestamp()).thenReturn(calendar);
         when(build.getRootDir()).thenReturn(SystemUtils.getJavaIoTmpDir());
         when(build.getNumber()).thenReturn(buildNumber);
-
-        ResultAction<?> action = mock(ResultAction.class);
-        when(action.hasReferenceAction()).thenReturn(false);
-        when(build.getAction((Class<ResultAction>)anyObject())).thenReturn(action);
 
         return build;
     }
@@ -251,9 +261,11 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            the current build
      * @param project
      *            the project of the current build
+     * @param history
+     *            the history of build results of the associated plug-in
      * @return the build result under test
      */
-    protected abstract T createBuildResult(AbstractBuild<?, ?> build, ParserResult project);
+    protected abstract T createBuildResult(AbstractBuild<?, ?> build, ParserResult project, BuildHistory history);
 
     /**
      * Creates the build result under test.
@@ -266,25 +278,15 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            the result of the previous build
      * @return the build result under test
      */
-    @SuppressWarnings("rawtypes")
-    protected final T createBuildResult(final AbstractBuild build, final ParserResult project, final T previousResult) {
-        AbstractBuild previousBuild = mock(AbstractBuild.class);
-        ResultAction previousAction = mock(ResultAction.class);
-        when(previousBuild.getAction((Class<ResultAction>)anyObject())).thenReturn(previousAction);
-        when(previousAction.getResult()).thenReturn(previousResult);
+    private T createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final T previousResult) {
+        BuildHistory history = mock(BuildHistory.class);
+        DefaultAnnotationContainer value = new DefaultAnnotationContainer(project.getAnnotations());
+        when(history.hasReferenceResult()).thenReturn(true);
+        when(history.getReferenceResult()).thenReturn(value);
+        when(history.hasPreviousResult()).thenReturn(true);
+        when(history.getPreviousResult()).thenReturn(previousResult);
 
-        when(build.getPreviousBuild()).thenReturn(previousBuild);
-
-        ResultAction action = build.getAction(null);
-        when(action.hasReferenceAction()).thenReturn(true);
-        when(action.getReferenceAction()).thenReturn(previousAction);
-        when(action.hasPreviousAction()).thenReturn(true);
-        when(action.getPreviousAction()).thenReturn(previousAction);
-        BuildResult currentResult = mock(BuildResult.class);
-        when(currentResult.getContainer()).thenReturn(new DefaultAnnotationContainer(project.getAnnotations()));
-        when(action.getResult()).thenReturn(currentResult);
-
-        return createBuildResult(build, project);
+        return createBuildResult(build, project, history);
     }
 }
 
