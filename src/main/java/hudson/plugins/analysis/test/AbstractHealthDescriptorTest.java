@@ -66,14 +66,6 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
     }
 
     /**
-     * Tests the method {@link AbstractHealthDescriptor#getMinimumAnnotations}.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void verifyContractOfThreshold() {
-        createHealthDescriptor("-1", "0", "0").getMinimumAnnotations();
-    }
-
-    /**
      * Tests the method {@link AbstractHealthDescriptor#getHealthyAnnotations()}.
      */
     @Test(expected = IllegalArgumentException.class)
