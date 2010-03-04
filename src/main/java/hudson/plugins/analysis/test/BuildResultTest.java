@@ -3,6 +3,7 @@ package hudson.plugins.analysis.test;
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import hudson.model.AbstractBuild;
+import hudson.plugins.analysis.Messages;
 import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
@@ -215,7 +216,24 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      * @param result
      *            the actual result to verify
      */
-    protected abstract void verifyHighScoreMessage(int expectedZeroWarningsBuildNumber, boolean expectedIsNewHighScore, long expectedHighScore, long gap, T result);
+    protected void verifyHighScoreMessage(final int expectedZeroWarningsBuildNumber, final boolean expectedIsNewHighScore, final long expectedHighScore, final long gap, final T result) {
+        if (result.hasNoAnnotations() && result.getDelta() == 0) {
+            assertTrue(result.getDetails().contains(Messages.ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
+            if (expectedIsNewHighScore) {
+                long days = BuildResult.getDays(expectedHighScore);
+                assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleHighScore(days)));
+            }
+            else {
+                long days = BuildResult.getDays(gap);
+                if (days == 1) {
+                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_OneNoHighScore()));
+                }
+                else {
+                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleNoHighScore(days)));
+                }
+            }
+        }
+    }
 
     /**
      * Creates a project that contains a single annotation.
