@@ -99,7 +99,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
     private BuildHistory createNullHistory() {
         BuildHistory history = mock(BuildHistory.class);
 
-        when(history.getReferenceResult()).thenReturn(new DefaultAnnotationContainer());
+        when(history.getReferenceAnnotations()).thenReturn(new DefaultAnnotationContainer());
 
         return history;
     }
@@ -281,8 +281,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
     private T createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final T previousResult) {
         BuildHistory history = mock(BuildHistory.class);
         DefaultAnnotationContainer value = new DefaultAnnotationContainer(project.getAnnotations());
-        when(history.hasReferenceResult()).thenReturn(true);
-        when(history.getReferenceResult()).thenReturn(value);
+        when(history.getReferenceAnnotations()).thenReturn(value);
         when(history.hasPreviousResult()).thenReturn(true);
         when(history.getPreviousResult()).thenReturn(previousResult);
 
