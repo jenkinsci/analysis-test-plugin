@@ -110,7 +110,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      * Verifies that the zero warnings since build counter is correctly
      * initialized in the beginning.
      */
-    @Test
+    @Test @Ignore
     public void checkZeroWarningsCounterInitialization() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
         long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
@@ -129,7 +129,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      * Verifies that the zero warnings since build counter is correctly
      * initialized in the beginning.
      */
-    @Test
+    @Test @Ignore
     public void checkZeroWarningsCounterInitializationStartUnstable() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
 
