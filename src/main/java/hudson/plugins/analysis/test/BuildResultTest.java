@@ -16,7 +16,6 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -43,9 +42,33 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
 
     /**
      * Verifies that the zero warnings since build counter is correctly
+     * initialized in the beginning.
+     */
+    @Test
+    public void checkZeroWarningsCounterInitializationStartUnstable() {
+        GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
+
+        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning(), createNullHistory());
+        verifyResult(1, 0, 0, 0, false, 0, result);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
+
+        result = createBuildResult(createBuild(1, calendar), new ParserResult(), result);
+        verifyResult(0, 1, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        result = createBuildResult(createBuild(0, calendar), new ParserResult(), result);
+        verifyResult(0, 1, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
+
+        result.getDataFile().delete();
+    }
+
+    /**
+     * Verifies that the zero warnings since build counter is correctly
      * propagated from build to build.
      */
-    @Test @Ignore
+    @Test
     public void checkThatZeroWarningsIsUpdated() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
         long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
@@ -110,7 +133,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      * Verifies that the zero warnings since build counter is correctly
      * initialized in the beginning.
      */
-    @Test @Ignore
+    @Test
     public void checkZeroWarningsCounterInitialization() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
         long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
@@ -121,30 +144,6 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         result = createBuildResult(createBuild(0, calendar), new ParserResult(), result);
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
-
-        result.getDataFile().delete();
-    }
-
-    /**
-     * Verifies that the zero warnings since build counter is correctly
-     * initialized in the beginning.
-     */
-    @Test @Ignore
-    public void checkZeroWarningsCounterInitializationStartUnstable() {
-        GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
-
-        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning(), createNullHistory());
-        verifyResult(1, 0, 0, 0, false, 0, result);
-
-        calendar.add(Calendar.DAY_OF_YEAR, 2);
-        long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
-
-        result = createBuildResult(createBuild(1, calendar), new ParserResult(), result);
-        verifyResult(0, 1, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
-
-        calendar.add(Calendar.DAY_OF_YEAR, 2);
-        result = createBuildResult(createBuild(0, calendar), new ParserResult(), result);
-        verifyResult(0, 1, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
 
         result.getDataFile().delete();
     }
@@ -222,7 +221,12 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
             assertTrue(result.getDetails().contains(Messages.ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
             if (expectedIsNewHighScore) {
                 long days = BuildResult.getDays(expectedHighScore);
-                assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleHighScore(days)));
+                if (days == 1) {
+                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_OneHighScore()));
+                }
+                else {
+                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleHighScore(days)));
+                }
             }
             else {
                 long days = BuildResult.getDays(gap);
