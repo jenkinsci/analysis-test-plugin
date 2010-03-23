@@ -26,6 +26,8 @@ import org.junit.Test;
  */
 public abstract class BuildResultTest<T extends BuildResult> extends AbstractEnglishLocaleTest {
     /** Error message. */
+    private static final String WRONG_MESSAGE = "Wrong message";
+    /** Error message. */
     private static final String WRONG_NEW_HIGHSCORE_INDICATOR = "Wrong new highscore indicator.";
     /** Two days in msec. */
     private static final long TWO_DAYS_IN_MS = 2 * DateUtils.MILLIS_PER_DAY;
@@ -218,23 +220,23 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      */
     protected void verifyHighScoreMessage(final int expectedZeroWarningsBuildNumber, final boolean expectedIsNewHighScore, final long expectedHighScore, final long gap, final T result) {
         if (result.hasNoAnnotations() && result.getDelta() == 0) {
-            assertTrue(result.getDetails().contains(Messages.ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
+            assertTrue(WRONG_MESSAGE, result.getDetails().contains(Messages.ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
             if (expectedIsNewHighScore) {
                 long days = BuildResult.getDays(expectedHighScore);
                 if (days == 1) {
-                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_OneHighScore()));
+                    assertTrue(WRONG_MESSAGE, result.getDetails().contains(Messages.ResultAction_OneHighScore()));
                 }
                 else {
-                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleHighScore(days)));
+                    assertTrue(WRONG_MESSAGE, result.getDetails().contains(Messages.ResultAction_MultipleHighScore(days)));
                 }
             }
             else {
                 long days = BuildResult.getDays(gap);
                 if (days == 1) {
-                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_OneNoHighScore()));
+                    assertTrue(WRONG_MESSAGE, result.getDetails().contains(Messages.ResultAction_OneNoHighScore()));
                 }
                 else {
-                    assertTrue("Wrong message", result.getDetails().contains(Messages.ResultAction_MultipleNoHighScore(days)));
+                    assertTrue(WRONG_MESSAGE, result.getDetails().contains(Messages.ResultAction_MultipleNoHighScore(days)));
                 }
             }
         }

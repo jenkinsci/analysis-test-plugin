@@ -13,18 +13,25 @@ import org.junit.Test;
  * @author Ulli Hafner
  */
 public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocaleTest {
+    /** Error message. */
+    private static final String WRONG_MINIMUM_ANNOTATIONS = "Wrong minimum annotations";
+    /** Error message. */
+    private static final String WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED = "Wrong value of isHealthyReportEnabled";
+    /** Error message. */
+    private static final String WRONG_VALUE_OF_IS_THRESHOLD_ENABLED = "Wrong value of isThresholdEnabled";
+
     /**
      * Tests the method {@link AbstractHealthDescriptor#isThresholdEnabled()}.
      */
     @Test
     public void testThresholds() {
-        assertTrue(createHealthDescriptor("0", "", "").isThresholdEnabled());
-        assertTrue(createHealthDescriptor("1", "", "").isThresholdEnabled());
-        assertTrue(createHealthDescriptor("100", "", "").isThresholdEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor("0", "", "").isThresholdEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor("1", "", "").isThresholdEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor("100", "", "").isThresholdEnabled());
 
-        assertFalse(createHealthDescriptor("-1", "", "").isThresholdEnabled());
-        assertFalse(createHealthDescriptor("", "", "").isThresholdEnabled());
-        assertFalse(createHealthDescriptor(null, "", "").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor("-1", "", "").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor("", "", "").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_THRESHOLD_ENABLED, createHealthDescriptor(null, "", "").isThresholdEnabled());
     }
 
     /**
@@ -32,16 +39,16 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
      */
     @Test
     public void testHealthyThresholds() {
-        assertTrue(createHealthDescriptor("", "0", "1").isHealthyReportEnabled());
-        assertTrue(createHealthDescriptor("", "1", "2").isHealthyReportEnabled());
-        assertTrue(createHealthDescriptor("", "10", "20").isHealthyReportEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "0", "1").isHealthyReportEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "1", "2").isHealthyReportEnabled());
+        assertTrue(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "10", "20").isHealthyReportEnabled());
 
-        assertFalse(createHealthDescriptor("", "0", "0").isHealthyReportEnabled());
-        assertFalse(createHealthDescriptor("", "1", "1").isThresholdEnabled());
-        assertFalse(createHealthDescriptor("", "2", "1").isThresholdEnabled());
-        assertFalse(createHealthDescriptor("", "2", "").isThresholdEnabled());
-        assertFalse(createHealthDescriptor("", "", "2").isThresholdEnabled());
-        assertFalse(createHealthDescriptor("", null, "2").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "0", "0").isHealthyReportEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "1", "1").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "2", "1").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "2", "").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", "", "2").isThresholdEnabled());
+        assertFalse(WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED, createHealthDescriptor("", null, "2").isThresholdEnabled());
     }
 
     /**
@@ -49,9 +56,9 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
      */
     @Test
     public void testConversionOfThresholds() {
-        assertEquals(0, createHealthDescriptor("0", "", "").getMinimumAnnotations());
-        assertEquals(1, createHealthDescriptor("1", "", "").getMinimumAnnotations());
-        assertEquals(100, createHealthDescriptor("100", "", "").getMinimumAnnotations());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 0, createHealthDescriptor("0", "", "").getMinimumAnnotations());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 1, createHealthDescriptor("1", "", "").getMinimumAnnotations());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 100, createHealthDescriptor("100", "", "").getMinimumAnnotations());
     }
 
 
@@ -61,8 +68,8 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
      */
     @Test
     public void testConversionOfHealthiness() {
-        assertEquals(1, createHealthDescriptor("0", "1", "2").getHealthyAnnotations());
-        assertEquals(2, createHealthDescriptor("0", "1", "2").getUnHealthyAnnotations());
+        assertEquals("Wrong healthy annotations", 1, createHealthDescriptor("0", "1", "2").getHealthyAnnotations());
+        assertEquals("Wrong unhealthy annotations", 2, createHealthDescriptor("0", "1", "2").getUnHealthyAnnotations());
     }
 
     /**
