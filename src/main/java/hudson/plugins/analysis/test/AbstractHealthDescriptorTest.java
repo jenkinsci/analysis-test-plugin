@@ -14,6 +14,8 @@ import org.junit.Test;
  */
 public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocaleTest {
     /** Error message. */
+    protected static final String WRONG_DESCRIPTION = "Wrong description";
+    /** Error message. */
     private static final String WRONG_MINIMUM_ANNOTATIONS = "Wrong minimum annotations";
     /** Error message. */
     private static final String WRONG_VALUE_OF_IS_HEALTHY_REPORT_ENABLED = "Wrong value of isHealthyReportEnabled";
