@@ -7,7 +7,7 @@ import org.junit.Before;
 /**
  * A test with predefined English locale.
  */
-public abstract class AbstractEnglishLocaleTest {
+public abstract class AbstractEnglishLocaleTest { // NOPMD
     /**
      * Initializes the locale to English.
      */
