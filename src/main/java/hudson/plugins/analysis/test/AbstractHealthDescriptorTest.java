@@ -59,9 +59,9 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
      */
     @Test
     public void testConversionOfThresholds() {
-        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 0, createHealthDescriptor("0", "", "").getMinimumAnnotations());
-        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 1, createHealthDescriptor("1", "", "").getMinimumAnnotations());
-        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 100, createHealthDescriptor("100", "", "").getMinimumAnnotations());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 0, createHealthDescriptor("0", "", "").getLowerBoundOfThresholds());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 1, createHealthDescriptor("1", "", "").getLowerBoundOfThresholds());
+        assertEquals(WRONG_MINIMUM_ANNOTATIONS, 100, createHealthDescriptor("100", "", "").getLowerBoundOfThresholds());
     }
 
 
