@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import hudson.plugins.analysis.core.AbstractHealthDescriptor;
 import hudson.plugins.analysis.core.HealthDescriptor;
+import hudson.plugins.analysis.core.Thresholds;
 
 import org.junit.Test;
 
@@ -107,7 +108,9 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
      */
     private AbstractHealthDescriptor createHealthDescriptor(final String threshold, final String healthy, final String unHealthy) {
         HealthDescriptor healthDescriptor = mock(HealthDescriptor.class);
-        when(healthDescriptor.getThreshold()).thenReturn(threshold);
+        Thresholds thresholds = new Thresholds();
+        thresholds.unstableTotalAll = threshold;
+        when(healthDescriptor.getThresholds()).thenReturn(thresholds);
         when(healthDescriptor.getHealthy()).thenReturn(healthy);
         when(healthDescriptor.getUnHealthy()).thenReturn(unHealthy);
 
