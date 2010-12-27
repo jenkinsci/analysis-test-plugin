@@ -55,7 +55,7 @@ public abstract class AbstractHealthDescriptorTest extends AbstractEnglishLocale
     }
 
     /**
-     * Tests the method {@link AbstractHealthDescriptor#getMinimumAnnotations}.
+     * Tests the method {@link AbstractHealthDescriptor#getLowerBoundOfThresholds()}.
      */
     @Test
     public void testConversionOfThresholds() {
