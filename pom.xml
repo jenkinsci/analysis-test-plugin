@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>analysis-pom</artifactId>
-    <version>1.15</version>
+    <version>1.16-SNAPSHOT</version>
     <relativePath>../analysis-pom/pom.xml</relativePath>
   </parent>
 
   <artifactId>analysis-test</artifactId>
   <packaging>jar</packaging>
-  <name>Hudson Analysis Test Utilities</name>
+  <name>Static Analysis Test Utilities</name>
   <version>1.5-SNAPSHOT</version>
   <description>This plug-in provides test utilities for the static code analysis plug-ins.</description>
 
