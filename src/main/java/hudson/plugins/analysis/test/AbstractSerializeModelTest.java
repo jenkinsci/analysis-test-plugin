@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
 import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
@@ -127,6 +128,41 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
 //        }
 
         return project;
+    }
+
+    /**
+     * Creates a new object from the serialization data stored in the specified
+     * file.
+     *
+     * @param fileName
+     *            the file to get the data from
+     * @return the deserialized object
+     * @param <T> type of object
+     */
+    @SuppressWarnings("unchecked")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("UI")
+    protected <T> T deserialize(final String fileName) {
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(fileName);
+
+            return (T)readFrom(new ObjectInputStream(inputStream));
+        }
+        catch (IOException exception) {
+            // ignore at this point
+        }
+        catch (ClassNotFoundException exception) {
+            // ignore at this point
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private Object readFrom(final ObjectInputStream objectStream) throws IOException, ClassNotFoundException {
+        try {
+            return objectStream.readObject();
+        }
+        finally {
+            objectStream.close();
+        }
     }
 
     /**
@@ -414,6 +450,33 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
         assertEquals(WRONG_NUMBER_OF_MODULES, 2, project.getModules().size());
         assertEquals(WRONG_NUMBER_OF_PACKAGES, 2, project.getPackages().size());
         assertEquals(WRONG_NUMBER_OF_FILES, 2, project.getFiles().size());
+    }
+
+    /**
+     * Verifies that the specified XML file is a valid serialization of the
+     * project.
+     *
+     * @param fileName
+     *            the file name
+     */
+    protected void ensureSerialization(final String fileName)  {
+        try {
+            File file = new File(getClass().getResource(fileName).toURI());
+            XmlFile xmlFile = createXmlFile(file);
+            Object deserialized = xmlFile.read();
+
+            FileAnnotation[] files = (FileAnnotation[]) deserialized;
+            JavaProject project = new JavaProject();
+            project.addAnnotations(files);
+
+            verifyProject(project);
+        }
+        catch (URISyntaxException exception) {
+            throw new IllegalArgumentException(exception);
+        }
+        catch (IOException exception) {
+            throw new IllegalArgumentException(exception);
+        }
     }
 }
 
