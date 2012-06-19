@@ -148,12 +148,11 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
             return (T)readFrom(new ObjectInputStream(inputStream));
         }
         catch (IOException exception) {
-            // ignore at this point
+            throw new IllegalArgumentException(exception);
         }
         catch (ClassNotFoundException exception) {
-            // ignore at this point
+            throw new IllegalArgumentException(exception);
         }
-        throw new IllegalArgumentException();
     }
 
     private Object readFrom(final ObjectInputStream objectStream) throws IOException, ClassNotFoundException {
