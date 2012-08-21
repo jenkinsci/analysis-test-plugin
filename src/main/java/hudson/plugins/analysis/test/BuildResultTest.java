@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 import hudson.model.AbstractBuild;
 import hudson.plugins.analysis.Messages;
 import hudson.plugins.analysis.core.BuildHistory;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
+import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.util.model.DefaultAnnotationContainer;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
@@ -62,8 +62,6 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         result = createBuildResult(createBuild(0, calendar), new ParserResult(), result);
         verifyResult(0, 1, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
-
-        result.getDataFile().delete();
     }
 
     /**
@@ -114,8 +112,6 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         result = createDefaultResultWithNoWarnings(4, calendar, result);
         verifyResult(0, 3, timeOfFirstZeroWarningsBuild, 2 * TWO_DAYS_IN_MS, true, 0, result);
-
-        result.getDataFile().delete();
     }
 
     /**
@@ -146,8 +142,6 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         result = createBuildResult(createBuild(0, calendar), new ParserResult(), result);
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, TWO_DAYS_IN_MS, true, 0, result);
-
-        result.getDataFile().delete();
     }
 
     /**
