@@ -1,6 +1,6 @@
 package hudson.plugins.analysis.test;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import hudson.model.AbstractBuild;
 import hudson.plugins.analysis.Messages;

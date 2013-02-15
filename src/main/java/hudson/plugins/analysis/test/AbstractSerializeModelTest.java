@@ -1,6 +1,6 @@
 package hudson.plugins.analysis.test;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import hudson.XmlFile;
 import hudson.plugins.analysis.Messages;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
