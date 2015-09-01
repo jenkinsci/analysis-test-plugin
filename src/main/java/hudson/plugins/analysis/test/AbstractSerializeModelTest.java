@@ -140,7 +140,7 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
      * @param <T> type of object
      */
     @SuppressWarnings("unchecked")
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("UI")
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("UI")
     protected <T> T deserialize(final String fileName) {
         try {
             InputStream inputStream = getClass().getResourceAsStream(fileName);
