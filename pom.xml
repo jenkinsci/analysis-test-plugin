@@ -15,7 +15,7 @@
   <description>This plug-in provides test utilities for the static code analysis plug-ins.</description>
 
   <properties>
-    <workflow-plugin.version>1.10</workflow-plugin.version>
+    <workflow-plugin.version>1.7</workflow-plugin.version>
   </properties>
 
   <dependencies>
