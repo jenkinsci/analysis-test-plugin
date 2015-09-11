@@ -1,17 +1,5 @@
 package hudson.plugins.analysis.test;
 
-import static org.junit.Assert.*;
-import hudson.XmlFile;
-import hudson.plugins.analysis.Messages;
-import hudson.plugins.analysis.util.model.AbstractAnnotation;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.JavaPackage;
-import hudson.plugins.analysis.util.model.JavaProject;
-import hudson.plugins.analysis.util.model.LineRange;
-import hudson.plugins.analysis.util.model.MavenModule;
-import hudson.plugins.analysis.util.model.Priority;
-import hudson.plugins.analysis.util.model.WorkspaceFile;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,6 +12,20 @@ import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.junit.Assert.*;
+
+import hudson.XmlFile;
+import hudson.plugins.analysis.Messages;
+import hudson.plugins.analysis.util.model.AbstractAnnotation;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.JavaPackage;
+import hudson.plugins.analysis.util.model.JavaProject;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.MavenModule;
+import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.analysis.util.model.WorkspaceFile;
 
 /**
  * Tests the serialization of the model.
@@ -140,7 +142,7 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
      * @param <T> type of object
      */
     @SuppressWarnings("unchecked")
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("UI")
+    @SuppressFBWarnings("UI")
     protected <T> T deserialize(final String fileName) {
         try {
             InputStream inputStream = getClass().getResourceAsStream(fileName);
