@@ -1,22 +1,23 @@
 package hudson.plugins.analysis.test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.Messages;
-import hudson.plugins.analysis.core.BuildHistory;
-import hudson.plugins.analysis.core.ParserResult;
-import hudson.plugins.analysis.core.BuildResult;
-import hudson.plugins.analysis.util.model.DefaultAnnotationContainer;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.Priority;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import hudson.model.AbstractBuild;
+import hudson.plugins.analysis.Messages;
+import hudson.plugins.analysis.core.BuildHistory;
+import hudson.plugins.analysis.core.BuildResult;
+import hudson.plugins.analysis.core.ParserResult;
+import hudson.plugins.analysis.util.model.DefaultAnnotationContainer;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
 
 /**
  * Tests the class {@link BuildResultTest}.
@@ -249,6 +250,8 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         when(annotation.getFileName()).thenReturn(FILENAME);
         when(annotation.getModuleName()).thenReturn("Module");
         when(annotation.getPackageName()).thenReturn("Package");
+        when(annotation.getAuthor()).thenReturn("Author");
+        when(annotation.getCommitId()).thenReturn("Commit");
         project.addAnnotation(annotation);
 
         return project;
