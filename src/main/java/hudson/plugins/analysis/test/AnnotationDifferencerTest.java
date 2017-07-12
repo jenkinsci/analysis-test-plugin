@@ -1,18 +1,19 @@
 package hudson.plugins.analysis.test;
 
-import static org.junit.Assert.*;
-import hudson.plugins.analysis.core.AnnotationDifferencer;
-import hudson.plugins.analysis.util.model.AbstractAnnotation;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.Priority;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
+import hudson.plugins.analysis.core.IssueDifference;
+import hudson.plugins.analysis.util.model.AbstractAnnotation;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
+
 /**
- * Tests the class {@link AnnotationDifferencer}.
+ * Tests the class {@link IssueDifference}.
  */
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public abstract class AnnotationDifferencerTest {
@@ -106,25 +107,29 @@ public abstract class AnnotationDifferencerTest {
         annotation = createAnnotation(STRING, Priority.HIGH, STRING, STRING, STRING, 2, 3);
         previous.add(annotation);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getFixedAnnotations(actual, previous).size());
 
         annotation = createAnnotation(STRING, Priority.HIGH, "type2", STRING, STRING, 2, 3);
         previous.add(annotation);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getNewAnnotations(actual, previous).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 1, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getNewAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 1, getFixedAnnotations(actual, previous).size());
 
         annotation = createAnnotation(STRING, Priority.HIGH, "type2", STRING, STRING, 2, 3);
         actual.add(annotation);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getNewAnnotations(actual, previous).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getNewAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getFixedAnnotations(actual, previous).size());
 
         annotation = createAnnotation(STRING, Priority.HIGH, "type3", STRING, STRING, 2, 3);
         actual.add(annotation);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 1, AnnotationDifferencer.getNewAnnotations(actual, previous).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 1, getNewAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getFixedAnnotations(actual, previous).size());
+    }
+
+    private Set<FileAnnotation> getFixedAnnotations(final Set<FileAnnotation> actual, final Set<FileAnnotation> previous) {
+        return new IssueDifference(actual, previous).getFixedIssues();
     }
 
     /**
@@ -141,14 +146,18 @@ public abstract class AnnotationDifferencerTest {
         FileAnnotation old = createAnnotation(STRING, Priority.HIGH, STRING, STRING, STRING, 2, 3);
         previous.add(old);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 1, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 1, AnnotationDifferencer.getNewAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 1, getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 1, getNewAnnotations(actual, previous).size());
 
         ((AbstractAnnotation)current).setContextHashCode(0);
         ((AbstractAnnotation)old).setContextHashCode(0);
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getFixedAnnotations(actual, previous).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, AnnotationDifferencer.getNewAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getFixedAnnotations(actual, previous).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, getNewAnnotations(actual, previous).size());
+    }
+
+    private Set<FileAnnotation> getNewAnnotations(final Set<FileAnnotation> actual, final Set<FileAnnotation> previous) {
+        return new IssueDifference(actual, previous).getNewIssues();
     }
 }
 
