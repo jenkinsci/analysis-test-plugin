@@ -11,10 +11,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.plugins.analysis.Messages;
-import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.BuildResult;
+import hudson.plugins.analysis.core.HistoryProvider;
 import hudson.plugins.analysis.core.ParserResult;
+import hudson.plugins.analysis.core.ReferenceProvider;
 import hudson.plugins.analysis.util.model.DefaultAnnotationContainer;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
@@ -51,7 +53,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
     public void checkZeroWarningsCounterInitializationStartUnstable() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
 
-        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning(), createNullHistory());
+        T result = createBuildResult(createBuild(0, calendar), createProjectWithWarning(), createNullHistory(), createNullHistoryProvider());
         verifyResult(1, 0, 0, 0, false, 0, result);
 
         calendar.add(Calendar.DAY_OF_YEAR, 2);
@@ -77,7 +79,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         T result; // the result is replaced by each new result
 
         // No change of defaults at the beginning
-        result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory());
+        result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory(), createNullHistoryProvider());
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
 
         // Compare with a result that has warnings
@@ -120,10 +122,21 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *
      * @return a null history object
      */
-    private BuildHistory createNullHistory() {
-        BuildHistory history = mock(BuildHistory.class);
+    private ReferenceProvider createNullHistory() {
+        ReferenceProvider history = mock(ReferenceProvider.class);
 
-        when(history.getReferenceAnnotations()).thenReturn(new DefaultAnnotationContainer());
+        when(history.getIssues()).thenReturn(new DefaultAnnotationContainer());
+
+        return history;
+    }
+
+    /**
+     * Creates a history that has no previous and reference builds.
+     *
+     * @return a null history object
+     */
+    private HistoryProvider createNullHistoryProvider() {
+        HistoryProvider history = mock(HistoryProvider.class);
 
         return history;
     }
@@ -137,7 +150,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
         long timeOfFirstZeroWarningsBuild = calendar.getTime().getTime();
 
-        T result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory());
+        T result = createBuildResult(createBuild(0, calendar), new ParserResult(), createNullHistory(), createNullHistoryProvider());
         verifyResult(0, 0, timeOfFirstZeroWarningsBuild, 0, true, 0, result);
 
         calendar.add(Calendar.DAY_OF_YEAR, 2);
@@ -167,7 +180,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      */
     private T createResultWithWarnings() {
         ParserResult projectWithWarning = createProjectWithWarning();
-        return createBuildResult(createBuild(42, new GregorianCalendar(2008, 1, 1, 12, 00)), projectWithWarning, createNullHistory());
+        return createBuildResult(createBuild(42, new GregorianCalendar(2008, 1, 1, 12, 00)), projectWithWarning, createNullHistory(), createNullHistoryProvider());
     }
 
     /**
@@ -283,11 +296,12 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            the current build
      * @param project
      *            the project of the current build
-     * @param history
-     *            the history of build results of the associated plug-in
+     * @param referenceProvider
+     *            the referenceProvider of build results of the associated plug-in
+     * @param historyProvider
      * @return the build result under test
      */
-    protected abstract T createBuildResult(AbstractBuild<?, ?> build, ParserResult project, BuildHistory history);
+    protected abstract T createBuildResult(Run<?, ?> build, ParserResult project, ReferenceProvider referenceProvider, final HistoryProvider historyProvider);
 
     /**
      * Creates the build result under test.
@@ -300,14 +314,16 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      *            the result of the previous build
      * @return the build result under test
      */
-    private T createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final T previousResult) {
-        BuildHistory history = mock(BuildHistory.class);
+    private T createBuildResult(final Run build, final ParserResult project, final T previousResult) {
+        ReferenceProvider reference = mock(ReferenceProvider.class);
         DefaultAnnotationContainer value = new DefaultAnnotationContainer(project.getAnnotations());
-        when(history.getReferenceAnnotations()).thenReturn(value);
+        when(reference.getIssues()).thenReturn(value);
+
+        HistoryProvider history = mock(HistoryProvider.class);
         when(history.hasPreviousResult()).thenReturn(true);
         when(history.getPreviousResult()).thenReturn(previousResult);
 
-        return createBuildResult(build, project, history);
+        return createBuildResult(build, project, reference, history);
     }
 }
 
