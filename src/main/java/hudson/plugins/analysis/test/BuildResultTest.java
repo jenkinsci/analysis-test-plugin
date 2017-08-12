@@ -71,6 +71,7 @@ public abstract class BuildResultTest<T extends BuildResult> extends AbstractEng
      * Verifies that the zero warnings since build counter is correctly
      * propagated from build to build.
      */
+    // FIXME: BuildHistory is created in BuildResult and could not be mocked anymore
     @Test
     public void checkThatZeroWarningsIsUpdated() {
         GregorianCalendar calendar = new GregorianCalendar(2008, 8, 8, 12, 30);
