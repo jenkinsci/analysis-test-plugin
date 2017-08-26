@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6">
+    <perl5 />
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -22,8 +23,8 @@
     <orderEntry type="library" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:1.6" level="project" />
-    <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:structs:1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jenkins-ci:symbol-annotation:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:structs:1.9" level="project" />
+    <orderEntry type="library" name="Maven: org.jenkins-ci:symbol-annotation:1.9" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.mockito:mockito-all:1.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins.workflow:workflow-job:1.5" level="project" />
