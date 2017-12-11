@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.jvnet.hudson.plugins</groupId>
       <artifactId>analysis-core</artifactId>
-      <version>1.93-SNAPSHOT</version>
+      <version>1.93</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
